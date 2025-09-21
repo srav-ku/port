@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -5,6 +6,11 @@ import { Award, ExternalLink, Calendar } from 'lucide-react';
 import { certificationsContent } from '@/content/siteData';
 
 export default function CertificationsSection() {
+  const [flippedCard, setFlippedCard] = useState<string | null>(null);
+
+  const handleCardClick = (certId: string) => {
+    setFlippedCard(flippedCard === certId ? null : certId);
+  };
   return (
     <section className="min-h-screen-safe section-padding section-spacing pt-20 lg:pt-24">
       <div className="max-w-6xl mx-auto">
@@ -29,7 +35,12 @@ export default function CertificationsSection() {
               viewport={{ once: true }}
               className="group perspective-1000"
             >
-              <div className="relative h-80 transform-style-preserve-3d transition-transform duration-[1200ms] hover:rotate-y-180 motion-reduce-ok">
+              <div 
+                className={`relative h-80 transform-style-preserve-3d transition-transform duration-[1200ms] motion-reduce-ok cursor-pointer ${
+                  flippedCard === cert.id ? 'rotate-y-180' : ''
+                }`}
+                onClick={() => handleCardClick(cert.id)}
+              >
                 {/* Front of card */}
                 <Card className="absolute inset-0 p-6 backface-hidden bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20 hover-elevate">
                   <div className="flex flex-col h-full">
@@ -56,7 +67,7 @@ export default function CertificationsSection() {
                     </div>
                     
                     <div className="text-xs text-muted-foreground mt-4 opacity-70">
-                      Hover to view details
+                      Click to view details
                     </div>
                   </div>
                 </Card>
@@ -67,7 +78,10 @@ export default function CertificationsSection() {
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold">{cert.name}</h3>
                       <button
-                        onClick={() => window.open(cert.url, '_blank', 'noopener,noreferrer')}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(cert.url, '_blank', 'noopener,noreferrer');
+                        }}
                         className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors"
                         data-testid={`button-verify-${cert.id}`}
                       >

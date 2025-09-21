@@ -1,64 +1,66 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Github, ChevronUp, ChevronDown } from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { projectsContent } from '@/content/siteData';
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ExternalLink, Github } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { projectsContent } from "@/content/siteData";
 
 export default function ProjectsSection() {
-  const [selectedFilter, setSelectedFilter] = useState('All Projects');
-  const [selectedProject, setSelectedProject] = useState<typeof projectsContent.projects[0] | null>(null);
-  const [canScrollUp, setCanScrollUp] = useState(false);
-  const [canScrollDown, setCanScrollDown] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("All Projects");
+  const [selectedProject, setSelectedProject] = useState<
+    (typeof projectsContent.projects)[0] | null
+  >(null);
+  const [isScrolling, setIsScrolling] = useState(false);
   const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const filteredProjects = selectedFilter === 'All Projects' 
-    ? projectsContent.projects 
-    : projectsContent.projects.filter(project => project.category === selectedFilter);
+  const filteredProjects =
+    selectedFilter === "All Projects"
+      ? projectsContent.projects
+      : projectsContent.projects.filter(
+          (project) => project.category === selectedFilter,
+        );
 
   // Clear selection when filter changes and selected project is not in filtered results
   useEffect(() => {
-    if (selectedProject && !filteredProjects.find(p => p.id === selectedProject.id)) {
+    if (
+      selectedProject &&
+      !filteredProjects.find((p) => p.id === selectedProject.id)
+    ) {
       setSelectedProject(null);
     }
   }, [selectedFilter, selectedProject, filteredProjects]);
 
-  // Check scroll position
-  const checkScrollPosition = () => {
-    const viewport = scrollViewportRef.current;
-    if (viewport) {
-      const { scrollTop, scrollHeight, clientHeight } = viewport;
-      setCanScrollUp(scrollTop > 0);
-      setCanScrollDown(scrollTop < scrollHeight - clientHeight - 1);
+  // Handle scroll start and auto-hide
+  const handleScroll = () => {
+    setIsScrolling(true);
+
+    // Clear existing timeout
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
     }
+
+    // Set new timeout to hide scrollbar after scrolling stops
+    scrollTimeoutRef.current = setTimeout(() => {
+      setIsScrolling(false);
+    }, 600);
   };
 
-  // Update scroll indicators when projects change
+  // Cleanup timeout on component unmount
   useEffect(() => {
-    setTimeout(checkScrollPosition, 100);
-  }, [filteredProjects]);
-
-  const scrollUp = () => {
-    const viewport = scrollViewportRef.current;
-    if (viewport) {
-      viewport.scrollTo({
-        top: viewport.scrollTop - 200,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  const scrollDown = () => {
-    const viewport = scrollViewportRef.current;
-    if (viewport) {
-      viewport.scrollTo({
-        top: viewport.scrollTop + 200,
-        behavior: 'smooth'
-      });
-    }
-  };
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <TooltipProvider>
@@ -72,7 +74,9 @@ export default function ProjectsSection() {
             viewport={{ once: true }}
             className="mb-8 sm:mb-12"
           >
-            <h2 className="text-fluid-4xl lg:text-fluid-5xl font-light mb-4 sm:mb-6">{projectsContent.title}</h2>
+            <h2 className="text-fluid-4xl lg:text-fluid-5xl font-light mb-4 sm:mb-6">
+              {projectsContent.title}
+            </h2>
             <div className="w-16 sm:w-20 h-1 bg-primary rounded-full" />
           </motion.div>
 
@@ -91,7 +95,7 @@ export default function ProjectsSection() {
                   variant={selectedFilter === category ? "default" : "outline"}
                   onClick={() => setSelectedFilter(category)}
                   className="text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-md transition-all duration-300 text-center min-w-0"
-                  data-testid={`filter-${category.toLowerCase().replace(/\s+/g, '-')}`}
+                  data-testid={`filter-${category.toLowerCase().replace(/\s+/g, "-")}`}
                 >
                   {category}
                 </Button>
@@ -110,82 +114,74 @@ export default function ProjectsSection() {
             >
               {/* Desktop: Vertical Scrolling */}
               <div className="hidden lg:block relative">
-                {/* Scroll Up Button */}
-                <motion.button
-                  onClick={scrollUp}
-                  disabled={!canScrollUp}
-                  className={`absolute -top-1 left-1/2 transform -translate-x-1/2 z-10 w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-                    canScrollUp 
-                      ? 'border-primary bg-background/90 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground shadow-lg hover-elevate' 
-                      : 'border-border/30 bg-muted/30 opacity-30 cursor-not-allowed'
+                <div
+                  className={`h-[60vh] w-full overflow-y-auto pr-2 py-4 flex flex-col gap-4 scrollbar-thin scrollbar-track-transparent transition-all duration-500 ease-in-out ${
+                    isScrolling
+                      ? "scrollbar-thumb-primary/60"
+                      : "scrollbar-thumb-transparent"
                   }`}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  whileHover={canScrollUp ? { scale: 1.1, y: -2 } : {}}
-                  whileTap={canScrollUp ? { scale: 0.95 } : {}}
-                  aria-label="Scroll up"
-                >
-                  <ChevronUp className="w-4 h-4" />
-                </motion.button>
-
-                <div 
-                  className="h-[60vh] w-full overflow-y-auto pr-2 py-4 flex flex-col gap-4 scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent"
+                  data-scrolling={isScrolling}
+                  style={{
+                    scrollbarColor: isScrolling
+                      ? "rgba(var(--primary), 0.6) transparent"
+                      : "transparent transparent",
+                    scrollbarWidth: "thin",
+                  }}
                   ref={scrollViewportRef}
-                  onScroll={checkScrollPosition}
+                  onScroll={handleScroll}
                 >
-                    {filteredProjects.map((project, index) => (
-                      <motion.div
-                        key={project.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: index * 0.1 }}
-                        className="flex-shrink-0"
-                      >
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              onClick={() => setSelectedProject(project)}
-                              className={`w-16 h-16 rounded-lg border-2 transition-all duration-300 overflow-hidden hover-elevate group ${
-                                selectedProject?.id === project.id
-                                  ? 'border-primary shadow-lg ring-2 ring-primary/20'
-                                  : 'border-border hover:border-primary/50'
-                              }`}
-                              data-testid={`project-${project.id}`}
-                              aria-label={project.title}
-                            >
-                              <img 
-                                src={project.image} 
-                                alt={project.title}
-                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                loading="lazy"
-                              />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent side="right">
-                            <p>{project.title}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </motion.div>
-                    ))}
+                  {filteredProjects.map((project, index) => (
+                    <motion.div
+                      key={project.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                      className="flex-shrink-0"
+                    >
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={() => setSelectedProject(project)}
+                            className={`w-16 h-16 rounded-lg border-2 transition-all duration-300 overflow-hidden hover-elevate group ${
+                              selectedProject?.id === project.id
+                                ? "border-primary shadow-lg ring-2 ring-primary/20"
+                                : "border-border hover:border-primary/50"
+                            }`}
+                            data-testid={`project-${project.id}`}
+                            aria-label={project.title}
+                          >
+                            <img
+                              src={project.image}
+                              alt={project.title}
+                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                              loading="lazy"
+                            />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="max-w-xs">
+                          <div className="space-y-2">
+                            <p className="font-medium">{project.title}</p>
+                            <div className="flex flex-wrap gap-1">
+                              {project.technologies.slice(0, 4).map((tech) => (
+                                <span
+                                  key={tech}
+                                  className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full"
+                                >
+                                  {tech}
+                                </span>
+                              ))}
+                              {project.technologies.length > 4 && (
+                                <span className="text-xs px-2 py-1 bg-muted text-muted-foreground rounded-full">
+                                  +{project.technologies.length - 4}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </TooltipContent>
+                      </Tooltip>
+                    </motion.div>
+                  ))}
                 </div>
-
-                {/* Scroll Down Button */}
-                <motion.button
-                  onClick={scrollDown}
-                  disabled={!canScrollDown}
-                  className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 z-10 w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-                    canScrollDown 
-                      ? 'border-primary bg-background/90 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground shadow-lg hover-elevate' 
-                      : 'border-border/30 bg-muted/30 opacity-30 cursor-not-allowed'
-                  }`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  whileHover={canScrollDown ? { scale: 1.1, y: 2 } : {}}
-                  whileTap={canScrollDown ? { scale: 0.95 } : {}}
-                  aria-label="Scroll down"
-                >
-                  <ChevronDown className="w-4 h-4" />
-                </motion.button>
               </div>
 
               {/* Mobile: Horizontal Scrolling */}
@@ -205,22 +201,39 @@ export default function ProjectsSection() {
                             onClick={() => setSelectedProject(project)}
                             className={`w-14 h-14 rounded-lg border-2 transition-all duration-300 overflow-hidden hover-elevate group ${
                               selectedProject?.id === project.id
-                                ? 'border-primary shadow-lg ring-2 ring-primary/20'
-                                : 'border-border hover:border-primary/50'
+                                ? "border-primary shadow-lg ring-2 ring-primary/20"
+                                : "border-border hover:border-primary/50"
                             }`}
                             data-testid={`project-${project.id}`}
                             aria-label={project.title}
                           >
-                            <img 
-                              src={project.image} 
+                            <img
+                              src={project.image}
                               alt={project.title}
                               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                               loading="lazy"
                             />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent side="top">
-                          <p>{project.title}</p>
+                        <TooltipContent side="top" className="max-w-xs">
+                          <div className="space-y-2">
+                            <p className="font-medium">{project.title}</p>
+                            <div className="flex flex-wrap gap-1">
+                              {project.technologies.slice(0, 3).map((tech) => (
+                                <span
+                                  key={tech}
+                                  className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full"
+                                >
+                                  {tech}
+                                </span>
+                              ))}
+                              {project.technologies.length > 3 && (
+                                <span className="text-xs px-2 py-1 bg-muted text-muted-foreground rounded-full">
+                                  +{project.technologies.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          </div>
                         </TooltipContent>
                       </Tooltip>
                     </motion.div>
@@ -244,27 +257,37 @@ export default function ProjectsSection() {
                     <Card className="overflow-hidden">
                       {/* Project Image */}
                       <div className="relative h-48 sm:h-64 lg:h-80">
-                        <img 
-                          src={selectedProject.image} 
+                        <img
+                          src={selectedProject.image}
                           alt={selectedProject.title}
                           className="w-full h-full object-cover"
                           loading="lazy"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                       </div>
-                      
+
                       {/* Project Details */}
                       <div className="p-4 sm:p-6 lg:p-8">
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 sm:gap-6 mb-6">
                           <div className="min-w-0">
-                            <h3 className="text-2xl sm:text-3xl font-bold mb-2">{selectedProject.title}</h3>
-                            <p className="text-muted-foreground text-base sm:text-lg">Project Overview</p>
+                            <h3 className="text-2xl sm:text-3xl font-bold mb-2">
+                              {selectedProject.title}
+                            </h3>
+                            <p className="text-muted-foreground text-base sm:text-lg">
+                              Project Overview
+                            </p>
                           </div>
                           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                             {selectedProject.github && (
                               <Button
                                 variant="outline"
-                                onClick={() => window.open(selectedProject.github, '_blank', 'noopener,noreferrer')}
+                                onClick={() =>
+                                  window.open(
+                                    selectedProject.github,
+                                    "_blank",
+                                    "noopener,noreferrer",
+                                  )
+                                }
                                 data-testid="button-github"
                                 className="min-h-[44px]"
                               >
@@ -274,7 +297,13 @@ export default function ProjectsSection() {
                             )}
                             {selectedProject.url && (
                               <Button
-                                onClick={() => window.open(selectedProject.url, '_blank', 'noopener,noreferrer')}
+                                onClick={() =>
+                                  window.open(
+                                    selectedProject.url,
+                                    "_blank",
+                                    "noopener,noreferrer",
+                                  )
+                                }
                                 data-testid="button-demo"
                                 className="min-h-[44px]"
                               >
@@ -284,16 +313,22 @@ export default function ProjectsSection() {
                             )}
                           </div>
                         </div>
-                        
+
                         <p className="text-muted-foreground mb-6 lg:mb-8 leading-relaxed text-base sm:text-lg">
                           {selectedProject.description}
                         </p>
-                        
+
                         <div>
-                          <h4 className="font-semibold mb-4 text-base lg:text-lg">Technologies Used</h4>
+                          <h4 className="font-semibold mb-4 text-base lg:text-lg">
+                            Technologies Used
+                          </h4>
                           <div className="flex flex-wrap gap-2">
                             {selectedProject.technologies.map((tech) => (
-                              <Badge key={tech} variant="secondary" className="text-xs sm:text-sm">
+                              <Badge
+                                key={tech}
+                                variant="secondary"
+                                className="text-xs sm:text-sm"
+                              >
                                 {tech}
                               </Badge>
                             ))}
@@ -312,7 +347,9 @@ export default function ProjectsSection() {
                   >
                     <Card className="border-dashed border-2 border-muted-foreground/20 bg-muted/10">
                       <div className="flex flex-col items-center justify-center min-h-[300px] lg:min-h-[400px] p-8 text-center">
-                        <h3 className="text-lg font-medium mb-3 text-muted-foreground">Select Project</h3>
+                        <h3 className="text-lg font-medium mb-3 text-muted-foreground">
+                          Select Project
+                        </h3>
                         <p className="text-sm text-muted-foreground max-w-sm">
                           Click on any project thumbnail to view details
                         </p>
