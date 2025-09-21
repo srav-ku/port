@@ -92,7 +92,8 @@ export default function AboutSection() {
             viewport={{ once: true }}
             className="motion-reduce-ok"
           >
-            <h3 className="text-fluid-2xl lg:text-fluid-3xl font-light mb-6 lg:mb-8">Education</h3>
+            <h2 className="text-fluid-4xl lg:text-fluid-5xl font-light mb-4 sm:mb-6">Education</h2>
+            <div className="w-16 sm:w-20 h-1 bg-primary rounded-full mb-6 lg:mb-8" />
             
             <div className="space-y-6 lg:space-y-8">
               {aboutContent.education.map((edu, index) => (
