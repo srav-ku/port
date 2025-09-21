@@ -1,8 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Moon, Sun, Menu, X } from 'lucide-react';
+import { Moon, Sun, Menu, X, Github, Linkedin, Twitter, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
 import { navigationSections } from '@/content/siteData';
+import { motion } from 'framer-motion';
+
+const socialLinks = [
+  { icon: Mail, href: 'mailto:sravanthkumarrr@gmail.com', label: 'Email' },
+  { icon: Github, href: 'https://github.com/sravanthkumar', label: 'GitHub' },
+  { icon: Linkedin, href: 'https://linkedin.com/in/sravanthkumar', label: 'LinkedIn' },
+  { icon: Twitter, href: 'https://twitter.com/sravanthkumar', label: 'Twitter' },
+];
 
 interface NavigationProps {
   activeSection: string;
@@ -95,13 +103,22 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
         } border-b border-border shadow-sm safe-top`}
         data-testid="navigation-mobile"
       >
-        <div className="flex items-center justify-between section-padding py-3">
-          <div className="flex items-center gap-3">
-            <span className="text-lg font-semibold text-primary">Sravanth</span>
-            <span className="text-lg font-light text-foreground">Kumar</span>
-          </div>
-          
+        <div className="flex items-center justify-end section-padding py-3">
           <div className="flex items-center gap-2">
+            {socialLinks.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target={social.label !== 'Email' ? '_blank' : undefined}
+                rel={social.label !== 'Email' ? 'noopener noreferrer' : undefined}
+                className="w-9 h-9 bg-background/60 backdrop-blur-sm border border-border rounded-full flex items-center justify-center hover:border-primary/40 hover:bg-primary/10 transition-all duration-300"
+              >
+                <social.icon className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
+              </a>
+            ))}
+            
+            <div className="w-px h-6 bg-border mx-1" />
+            
             <Button
               variant="ghost"
               size="icon"
@@ -134,26 +151,64 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
           </div>
         </div>
 
-        {/* Mobile Menu Overlay */}
+        {/* Mobile Menu - Connected Button Layout */}
         {isMobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-md border-b border-border shadow-lg">
-            <div className="section-padding py-4 space-y-2">
-              {navigationSections.map((section) => (
-                <button
-                  key={section.id}
-                  onClick={() => handleSectionClick(section.id)}
-                  className={`w-full text-left px-4 py-3 text-base font-medium transition-all duration-300 rounded-lg hover-elevate min-h-[44px] ${
-                    activeSection === section.id
-                      ? 'text-primary bg-primary/10'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                  data-testid={`nav-mobile-${section.id}`}
-                >
-                  {section.label}
-                </button>
-              ))}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="absolute top-full right-4 mt-2 z-50"
+          >
+            <div className="relative">
+              {/* Connecting Lines */}
+              <div className="absolute left-1 top-0 bottom-0 w-px bg-gradient-to-b from-primary/40 via-border to-primary/40" />
+              
+              {/* Navigation Buttons */}
+              <div className="flex flex-col gap-1">
+                {navigationSections.map((section, index) => (
+                  <motion.div
+                    key={section.id}
+                    initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    transition={{ 
+                      duration: 0.3, 
+                      delay: index * 0.1,
+                      ease: "easeOut" 
+                    }}
+                    className="relative flex items-center"
+                  >
+                    {/* Connection Node */}
+                    <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 z-10" />
+                    
+                    {/* Button */}
+                    <motion.button
+                      onClick={() => handleSectionClick(section.id)}
+                      className={`relative ml-4 px-4 py-2 text-sm font-medium rounded-full border backdrop-blur-sm transition-all duration-300 min-w-[120px] ${
+                        activeSection === section.id
+                          ? 'text-primary bg-primary/20 border-primary/40 shadow-lg shadow-primary/20'
+                          : 'text-muted-foreground hover:text-foreground bg-background/80 border-border hover:border-primary/30 hover:bg-primary/10'
+                      }`}
+                      whileHover={{ scale: 1.05, x: 4 }}
+                      whileTap={{ scale: 0.95 }}
+                      data-testid={`nav-mobile-${section.id}`}
+                    >
+                      {section.label}
+                      {activeSection === section.id && (
+                        <motion.div
+                          className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/10 to-primary/20"
+                          layoutId="mobileActiveTab"
+                          initial={false}
+                          transition={{ duration: 0.3, ease: "easeOut" }}
+                        />
+                      )}
+                    </motion.button>
+                  </motion.div>
+                ))}
+              </div>
+              
             </div>
-          </div>
+          </motion.div>
         )}
       </nav>
 

@@ -14,25 +14,28 @@ export default function SocialFloatingIcons() {
       initial={{ opacity: 0, x: 30 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8, delay: 1 }}
-      className="fixed top-1/2 right-4 transform -translate-y-1/2 z-40 hidden lg:block"
+      className="fixed top-24 right-4 z-40 hidden lg:block"
       data-testid="social-floating-icons"
     >
       <div className="flex flex-col items-center gap-4">
         {/* Email at top */}
-        <motion.div
-          className="text-xs text-muted-foreground rotate-90 origin-center whitespace-nowrap"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+        <motion.a
+          href="mailto:sravanthkumarrr@gmail.com"
+          className="text-xs text-muted-foreground hover:text-primary transition-colors whitespace-nowrap cursor-pointer mb-2"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.4 }}
+          whileHover={{ scale: 1.05 }}
+          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
         >
           sravanthkumarrr@gmail.com
-        </motion.div>
+        </motion.a>
         
         {/* Connecting Line */}
         <motion.div
-          className="w-px h-16 bg-gradient-to-b from-border to-transparent"
+          className="w-px h-20 bg-gradient-to-b from-primary/40 via-border to-transparent"
           initial={{ height: 0 }}
-          animate={{ height: 64 }}
+          animate={{ height: 80 }}
           transition={{ duration: 0.8, delay: 1.2 }}
         />
 
@@ -50,7 +53,7 @@ export default function SocialFloatingIcons() {
               transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
               whileHover={{ scale: 1.1 }}
               onClick={(e) => {
-                e.preventDefault();
+                // Let all links work naturally, just log for debugging
                 console.log(`${social.label} clicked:`, social.href);
               }}
               data-testid={`social-${social.label.toLowerCase()}`}

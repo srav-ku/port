@@ -14,19 +14,19 @@ export default function HeroSection({ onScrollToNext }: HeroSectionProps) {
       <div className="absolute inset-0 z-0">
         <picture>
           <source 
-            srcSet="/attached_assets/generated_images/Professional_developer_workspace_hero_6c874a1c.png" 
+            srcSet="/attached_assets/clean-workspace-bg.png" 
             type="image/png"
           />
           <img 
-            src="/attached_assets/generated_images/Professional_developer_workspace_hero_6c874a1c.png"
+            src="/attached_assets/clean-workspace-bg.png"
             alt="Professional developer workspace"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center opacity-30"
             loading="eager"
-            fetchpriority="high"
             decoding="async"
           />
         </picture>
-        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-background/95" />
+        {/* Light overlay for subtle background */}
+        <div className="absolute inset-0 bg-background/60" />
       </div>
       
       {/* Content */}
@@ -57,14 +57,37 @@ export default function HeroSection({ onScrollToNext }: HeroSectionProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <Button 
-              size="lg" 
-              className="w-full sm:w-auto px-6 sm:px-8 py-3 text-base sm:text-lg min-h-[44px]"
-              data-testid="button-my-resume"
-              onClick={() => console.log('My Resume clicked')}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              className="relative overflow-hidden rounded-lg"
             >
-              {heroContent.buttons.primary.text}
-            </Button>
+              <Button 
+                size="lg" 
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 text-base sm:text-lg min-h-[44px] relative overflow-hidden group"
+                data-testid="button-my-resume"
+                onClick={() => console.log('My Resume clicked')}
+              >
+                <motion.span
+                  className="relative z-10"
+                  initial={{ y: 0 }}
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  {heroContent.buttons.primary.text}
+                </motion.span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/30 opacity-0 group-hover:opacity-100"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: "0%" }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                />
+                <motion.div
+                  className="absolute inset-0 bg-primary/10 scale-x-0 group-hover:scale-x-100 origin-left"
+                  transition={{ duration: 0.2 }}
+                />
+              </Button>
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>
