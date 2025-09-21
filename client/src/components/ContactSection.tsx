@@ -1,0 +1,158 @@
+import { motion } from 'framer-motion';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Mail, Send, ArrowRight } from 'lucide-react';
+
+export default function ContactSection() {
+  return (
+    <section className="min-h-screen flex items-center py-20">
+      <div className="max-w-4xl mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl lg:text-5xl font-light mb-6">Let's Connect</h2>
+          <div className="w-20 h-1 bg-primary mx-auto rounded-full" />
+          <p className="text-xl text-muted-foreground mt-6 max-w-2xl mx-auto">
+            Let's build something meaningful together.
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-12">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <Card className="p-8 h-full bg-gradient-to-br from-primary/5 to-transparent border-primary/20">
+              <h3 className="text-2xl font-semibold mb-6">Ready to Start a Project?</h3>
+              <p className="text-muted-foreground mb-6 leading-relaxed">
+                I'm always excited to work on new projects and collaborate with creative teams. 
+                Whether you have a clear vision or just an idea, I'd love to help bring it to life.
+              </p>
+              
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <span className="text-sm">Full-stack development expertise</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <span className="text-sm">Modern technology stack</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <span className="text-sm">Agile development process</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <span className="text-sm">Focus on user experience</span>
+                </div>
+              </div>
+
+              {/* Email Me Card */}
+              <Card className="p-6 hover-elevate cursor-pointer transition-all" onClick={() => console.log('Email clicked')}>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold">Email Me</h4>
+                    <p className="text-sm text-muted-foreground">hello@developer.com</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                </div>
+              </Card>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <Card className="p-8 h-full">
+              <h3 className="text-xl font-semibold mb-6">Or contact through this form</h3>
+              
+              <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); console.log('Form submitted'); }}>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="firstName" className="block text-sm font-medium mb-2">
+                      First Name
+                    </label>
+                    <Input 
+                      id="firstName" 
+                      placeholder="John"
+                      data-testid="input-first-name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="lastName" className="block text-sm font-medium mb-2">
+                      Last Name
+                    </label>
+                    <Input 
+                      id="lastName" 
+                      placeholder="Doe"
+                      data-testid="input-last-name"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium mb-2">
+                    Email
+                  </label>
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    placeholder="john@example.com"
+                    data-testid="input-email"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium mb-2">
+                    Subject
+                  </label>
+                  <Input 
+                    id="subject" 
+                    placeholder="Project inquiry"
+                    data-testid="input-subject"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium mb-2">
+                    Message
+                  </label>
+                  <Textarea 
+                    id="message" 
+                    placeholder="Tell me about your project..."
+                    rows={4}
+                    data-testid="input-message"
+                  />
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  className="w-full"
+                  data-testid="button-send-message"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Send Message
+                </Button>
+              </form>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
