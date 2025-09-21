@@ -1,0 +1,189 @@
+export const personalInfo = {
+  name: {
+    first: "Sravanth",
+    last: "Kumar",
+  },
+  email: "sravanthkumarrr@gmail.com",
+  tagline: "Crafting digital experiences with modern technology and creative vision. Passionate about building solutions that make a difference.",
+};
+
+export const heroContent = {
+  title: {
+    first: "Sravanth", // Will use theme color
+    last: "Kumar", // Will use white/foreground color
+  },
+  description: personalInfo.tagline,
+  buttons: {
+    primary: {
+      text: "My Resume",
+      action: "resume",
+    },
+  },
+};
+
+export const navigationSections = [
+  { id: 'home', label: 'Home', shortcut: '1' },
+  { id: 'about', label: 'About', shortcut: '2' },
+  { id: 'skills', label: 'Skills', shortcut: '3' },
+  { id: 'projects', label: 'Projects', shortcut: '4' },
+  { id: 'experience', label: 'Experience', shortcut: '5' },
+  { id: 'certifications', label: 'Certifications', shortcut: '6' },
+  { id: 'contact', label: 'Contact', shortcut: '7' },
+];
+
+export const aboutContent = {
+  title: "About Me",
+  description: "I'm a passionate developer with experience in building modern web applications and solving complex problems through innovative solutions.",
+  education: [
+    {
+      id: "1",
+      institution: "University Name",
+      degree: "Bachelor's in Computer Science",
+      period: "2018 - 2022",
+      description: "Focused on software engineering, data structures, and web development.",
+    },
+    {
+      id: "2", 
+      institution: "Institute Name",
+      degree: "Full Stack Development Certification",
+      period: "2022",
+      description: "Specialized in React, Node.js, and modern web technologies.",
+    },
+  ],
+};
+
+export const skillsContent = {
+  title: "Skills",
+  categories: [
+    {
+      name: "Frontend",
+      skills: ["React", "TypeScript", "Tailwind CSS", "Next.js", "Vue.js"],
+    },
+    {
+      name: "Backend", 
+      skills: ["Node.js", "Express", "Python", "PostgreSQL", "MongoDB"],
+    },
+    {
+      name: "Tools & Technologies",
+      skills: ["Git", "Docker", "AWS", "Figma", "VSCode"],
+    },
+  ],
+};
+
+export const projectsContent = {
+  title: "Projects",
+  filterCategories: ["All Projects", "Web Apps", "Mobile Apps", "Open Source"],
+  projects: [
+    {
+      id: "ecommerce",
+      title: "E-Commerce Platform",
+      category: "Web Apps",
+      description: "A full-stack e-commerce solution with modern UI and secure payments.",
+      technologies: ["React", "Node.js", "Stripe", "PostgreSQL"],
+      icon: "🛍️",
+      url: "https://ecommerce.demo",
+      github: "https://github.com/example/ecommerce",
+      image: "/attached_assets/generated_images/Web_application_interface_mockup_414f218b.png",
+    },
+    {
+      id: "task-app",
+      title: "Task Management App", 
+      category: "Web Apps",
+      description: "Collaborative task management with real-time updates.",
+      technologies: ["React", "Socket.io", "MongoDB"],
+      icon: "✅",
+      url: "https://tasks.app",
+      github: "https://github.com/example/tasks",
+      image: "/attached_assets/generated_images/Mobile_app_interface_mockup_9cace1c0.png",
+    },
+    {
+      id: "analytics",
+      title: "Analytics Dashboard",
+      category: "Web Apps", 
+      description: "Data visualization dashboard with interactive charts.",
+      technologies: ["React", "D3.js", "Express", "PostgreSQL"],
+      icon: "📊",
+      url: "https://analytics.demo",
+      github: "https://github.com/example/analytics",
+      image: "/attached_assets/generated_images/Web_application_interface_mockup_414f218b.png",
+    },
+  ],
+};
+
+export const experienceContent = {
+  title: "Experience",
+  experiences: [
+    {
+      id: "1",
+      company: "Tech Company",
+      position: "Senior Frontend Developer",
+      period: "2022 - Present",
+      location: "Remote",
+      description: "Led frontend development for multiple high-traffic applications, mentored junior developers, and implemented modern development practices.",
+      achievements: [
+        "Improved application performance by 40%",
+        "Led a team of 5 developers",
+        "Implemented CI/CD pipelines",
+      ],
+      technologies: ["React", "TypeScript", "Next.js", "GraphQL"],
+    },
+    {
+      id: "2",
+      company: "Startup Inc.",
+      position: "Full Stack Developer",
+      period: "2020 - 2022",
+      location: "New York, NY",
+      description: "Developed and maintained full-stack applications, worked closely with design team to implement pixel-perfect UIs.",
+      achievements: [
+        "Built 3 major applications from scratch",
+        "Reduced loading times by 60%",
+        "Implemented automated testing",
+      ],
+      technologies: ["React", "Node.js", "MongoDB", "AWS"],
+    },
+  ],
+};
+
+export const certificationsContent = {
+  title: "Certifications",
+  certifications: [
+    {
+      id: "1",
+      name: "AWS Certified Solutions Architect",
+      issuer: "Amazon Web Services",
+      date: "2023",
+      credentialId: "AWS-12345",
+      url: "https://aws.amazon.com/certification/",
+      icon: "☁️",
+    },
+    {
+      id: "2", 
+      name: "React Developer Certification",
+      issuer: "Meta",
+      date: "2022",
+      credentialId: "META-67890",
+      url: "https://developers.facebook.com/",
+      icon: "⚛️",
+    },
+    {
+      id: "3",
+      name: "Google Cloud Professional",
+      issuer: "Google Cloud",
+      date: "2023",
+      credentialId: "GCP-11111",
+      url: "https://cloud.google.com/certification/",
+      icon: "🏗️",
+    },
+  ],
+};
+
+export const contactContent = {
+  title: "Get in Touch",
+  description: "Let's work together to bring your ideas to life. I'm always open to discussing new opportunities and interesting projects.",
+  email: personalInfo.email,
+  social: {
+    github: "https://github.com/sravanthkumar",
+    linkedin: "https://linkedin.com/in/sravanthkumar", 
+    twitter: "https://twitter.com/sravanthkumar",
+  },
+};

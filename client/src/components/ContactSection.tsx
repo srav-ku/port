@@ -4,21 +4,22 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Mail, Send, ArrowRight } from 'lucide-react';
+import { personalInfo } from '@/content/siteData';
 
 export default function ContactSection() {
   return (
-    <section className="min-h-screen flex items-center py-20">
-      <div className="max-w-4xl mx-auto px-6">
+    <section className="min-h-screen-safe section-padding section-spacing pt-20 lg:pt-24">
+      <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="mb-8 sm:mb-12 lg:mb-16"
         >
-          <h2 className="text-4xl lg:text-5xl font-light mb-6">Let's Connect</h2>
-          <div className="w-20 h-1 bg-primary mx-auto rounded-full" />
-          <p className="text-xl text-muted-foreground mt-6 max-w-2xl mx-auto">
+          <h2 className="text-fluid-4xl lg:text-fluid-5xl font-light mb-4 sm:mb-6">Let's Connect</h2>
+          <div className="w-16 sm:w-20 h-1 bg-primary rounded-full" />
+          <p className="text-fluid-lg lg:text-fluid-xl text-muted-foreground mt-4 sm:mt-6 max-w-2xl">
             Let's build something meaningful together.
           </p>
         </motion.div>
@@ -57,14 +58,17 @@ export default function ContactSection() {
               </div>
 
               {/* Email Me Card */}
-              <Card className="p-6 hover-elevate cursor-pointer transition-all" onClick={() => console.log('Email clicked')}>
+              <Card 
+                className="p-6 hover-elevate cursor-pointer transition-all" 
+                onClick={() => window.open(`mailto:${personalInfo.email}`, '_blank')}
+              >
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
                     <Mail className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
                     <h4 className="font-semibold">Email Me</h4>
-                    <p className="text-sm text-muted-foreground">hello@developer.com</p>
+                    <p className="text-sm text-muted-foreground">{personalInfo.email}</p>
                   </div>
                   <ArrowRight className="w-4 h-4 text-muted-foreground" />
                 </div>

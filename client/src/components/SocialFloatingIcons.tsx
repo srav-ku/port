@@ -2,10 +2,10 @@ import { motion } from 'framer-motion';
 import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
 
 const socialLinks = [
-  { icon: Mail, href: 'mailto:hello@developer.com', label: 'Email' },
-  { icon: Github, href: 'https://github.com/developer', label: 'GitHub' },
-  { icon: Linkedin, href: 'https://linkedin.com/in/developer', label: 'LinkedIn' },
-  { icon: Twitter, href: 'https://twitter.com/developer', label: 'Twitter' },
+  { icon: Mail, href: 'mailto:sravanthkumarrr@gmail.com', label: 'Email' },
+  { icon: Github, href: 'https://github.com/sravanthkumar', label: 'GitHub' },
+  { icon: Linkedin, href: 'https://linkedin.com/in/sravanthkumar', label: 'LinkedIn' },
+  { icon: Twitter, href: 'https://twitter.com/sravanthkumar', label: 'Twitter' },
 ];
 
 export default function SocialFloatingIcons() {
@@ -14,7 +14,7 @@ export default function SocialFloatingIcons() {
       initial={{ opacity: 0, x: 30 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8, delay: 1 }}
-      className="fixed top-1/2 right-4 transform -translate-y-1/2 z-40"
+      className="fixed top-1/2 right-4 transform -translate-y-1/2 z-40 hidden lg:block"
       data-testid="social-floating-icons"
     >
       <div className="flex flex-col items-center gap-4">
@@ -25,7 +25,7 @@ export default function SocialFloatingIcons() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.4 }}
         >
-          hello@developer.com
+          sravanthkumarrr@gmail.com
         </motion.div>
         
         {/* Connecting Line */}
