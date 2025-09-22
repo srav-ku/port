@@ -1,8 +1,9 @@
 import React from 'react';
-import { Moon, Sun, Eye, EyeOff, Save, Download, Upload, RotateCcw } from 'lucide-react';
+import { Moon, Sun, Eye, EyeOff, Save, Download, Upload, RotateCcw, LogOut, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useContent } from '@/contexts/ContentContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
 
 interface AdminHeaderProps {
@@ -12,7 +13,8 @@ interface AdminHeaderProps {
 
 export default function AdminHeader({ showPreview, onTogglePreview }: AdminHeaderProps) {
   const { theme, toggleTheme } = useTheme();
-  const { isDirty, lastSaved, saveToStorage, exportData, importData, resetContent } = useContent();
+  const { isDirty, lastSaved, saving, saveToFirestore, exportData, importData, resetContent } = useContent();
+  const { logout, user } = useAuth();
 
   const handleExport = () => {
     const data = exportData();
@@ -49,10 +51,20 @@ export default function AdminHeader({ showPreview, onTogglePreview }: AdminHeade
     input.click();
   };
 
-  const handleSave = () => {
-    if (saveToStorage()) {
-      // Show success message
+  const handleSave = async () => {
+    const success = await saveToFirestore();
+    if (success) {
+      // Could show success toast here
+    } else {
+      alert('Failed to save content. Please try again.');
     }
+  };
+
+  const handleLogout = async () => {
+    if (isDirty && !window.confirm('You have unsaved changes. Are you sure you want to log out?')) {
+      return;
+    }
+    await logout();
   };
 
   const handleReset = () => {
@@ -88,11 +100,20 @@ export default function AdminHeader({ showPreview, onTogglePreview }: AdminHeade
             variant="ghost"
             size="sm"
             onClick={handleSave}
-            disabled={!isDirty}
+            disabled={!isDirty || saving}
             className="gap-2"
           >
-            <Save className="w-4 h-4" />
-            Save
+            {saving ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                Save to Cloud
+              </>
+            )}
           </Button>
 
           <div className="w-px h-6 bg-border" />
@@ -146,6 +167,16 @@ export default function AdminHeader({ showPreview, onTogglePreview }: AdminHeade
           >
             {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
           </Button>
+
+          <div className="w-px h-6 bg-border" />
+
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>{user?.email}</span>
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2">
+              <LogOut className="w-4 h-4" />
+              Logout
+            </Button>
+          </div>
         </div>
       </div>
     </header>

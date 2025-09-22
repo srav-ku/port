@@ -1,6 +1,17 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { SiteContent, ContentUpdate } from '@shared/contentSchema';
 import * as siteData from '@/content/siteData';
+import { firestoreService } from '@/lib/firestore';
+import { useAuth } from '@/contexts/AuthContext';
+
+// Hook to safely use auth context (returns null if not available)
+const useSafeAuth = () => {
+  try {
+    return useAuth();
+  } catch (error) {
+    return { isAdmin: false, user: null };
+  }
+};
 
 // Transform the current siteData to match the new schema
 const transformSiteData = (): SiteContent => {
@@ -22,10 +33,14 @@ interface ContentContextType {
   content: SiteContent;
   isDirty: boolean;
   lastSaved: Date | null;
+  loading: boolean;
+  saving: boolean;
   updateContent: (path: string, value: any) => void;
   updateMultiple: (updates: ContentUpdate[]) => void;
   resetContent: () => void;
-  saveToStorage: () => void;
+  saveToFirestore: () => Promise<boolean>;
+  loadFromFirestore: () => Promise<boolean>;
+  saveToStorage: () => boolean;
   loadFromStorage: () => boolean;
   exportData: () => string;
   importData: (jsonData: string) => boolean;
@@ -39,11 +54,59 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [content, setContent] = useState<SiteContent>(transformSiteData());
   const [isDirty, setIsDirty] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const { isAdmin, user } = useSafeAuth();
 
-  // Initialize content from localStorage if available
+  // Initialize content - Load from Firestore if admin, otherwise from localStorage
   useEffect(() => {
-    loadFromStorage();
-  }, []);
+    const initializeContent = async () => {
+      if (isAdmin && user) {
+        const loaded = await loadFromFirestore();
+        // If no data exists in Firestore, auto-initialize with defaults
+        if (!loaded) {
+          console.log('No portfolio data found in Firestore. Initializing with defaults...');
+          const defaultContent = transformSiteData();
+          setSaving(true);
+          try {
+            const success = await firestoreService.saveContent(defaultContent);
+            if (success) {
+              setContent(defaultContent);
+              setLastSaved(new Date());
+              setIsDirty(false);
+              console.log('Portfolio data initialized in Firestore successfully!');
+            }
+          } catch (error) {
+            console.error('Failed to initialize Firestore data:', error);
+          } finally {
+            setSaving(false);
+          }
+        }
+      } else {
+        loadFromStorage();
+      }
+    };
+    
+    initializeContent();
+  }, [isAdmin, user]);
+
+  // Set up real-time sync for admin users
+  useEffect(() => {
+    if (isAdmin && user) {
+      firestoreService.subscribeToContent((firestoreContent, metadata) => {
+        if (firestoreContent && !isDirty) {
+          setContent(firestoreContent);
+          if (metadata?.lastModified) {
+            setLastSaved(new Date(metadata.lastModified));
+          }
+        }
+      });
+
+      return () => {
+        firestoreService.unsubscribeFromContent();
+      };
+    }
+  }, [isAdmin, user, isDirty]);
 
   const setValueByPath = useCallback((obj: any, path: string, value: any) => {
     const keys = path.split('.');
@@ -80,11 +143,78 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setIsDirty(true);
   }, [setValueByPath]);
 
-  const resetContent = useCallback(() => {
-    setContent(transformSiteData());
-    setIsDirty(false);
-    setLastSaved(null);
-  }, []);
+  const resetContent = useCallback(async () => {
+    const defaultContent = transformSiteData();
+    setContent(defaultContent);
+    setIsDirty(true);
+    
+    // If admin, also reset the Firestore content
+    if (isAdmin && user) {
+      setSaving(true);
+      try {
+        await firestoreService.saveContent(defaultContent);
+        setIsDirty(false);
+        setLastSaved(new Date());
+      } catch (error) {
+        console.error('Failed to reset content in Firestore:', error);
+      } finally {
+        setSaving(false);
+      }
+    } else {
+      setIsDirty(false);
+      setLastSaved(null);
+    }
+  }, [isAdmin, user]);
+
+  const saveToFirestore = useCallback(async (): Promise<boolean> => {
+    if (!isAdmin || !user) {
+      return false;
+    }
+
+    setSaving(true);
+    try {
+      const success = await firestoreService.saveContent(content);
+      if (success) {
+        setIsDirty(false);
+        setLastSaved(new Date());
+      }
+      return success;
+    } catch (error) {
+      console.error('Failed to save to Firestore:', error);
+      return false;
+    } finally {
+      setSaving(false);
+    }
+  }, [content, isAdmin, user]);
+
+  const loadFromFirestore = useCallback(async (): Promise<boolean> => {
+    if (!isAdmin || !user) {
+      return false;
+    }
+
+    setLoading(true);
+    try {
+      const firestoreContent = await firestoreService.loadContent();
+      if (firestoreContent) {
+        setContent(firestoreContent);
+        setIsDirty(false);
+        
+        const metadata = await firestoreService.getContentMetadata();
+        if (metadata?.lastModified) {
+          setLastSaved(new Date(metadata.lastModified));
+        }
+        console.log('Portfolio data loaded from Firestore successfully!');
+        return true;
+      }
+      console.log('No existing portfolio data found in Firestore.');
+      return false;
+    } catch (error) {
+      console.error('Failed to load from Firestore:', error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, [isAdmin, user]);
 
   const saveToStorage = useCallback(() => {
     try {
@@ -93,14 +223,16 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
         timestamp: new Date().toISOString()
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
-      setIsDirty(false);
-      setLastSaved(new Date());
+      if (!isAdmin) { // Only update these states if not admin (admin uses Firestore)
+        setIsDirty(false);
+        setLastSaved(new Date());
+      }
       return true;
     } catch (error) {
       console.error('Failed to save to localStorage:', error);
       return false;
     }
-  }, [content]);
+  }, [content, isAdmin]);
 
   const loadFromStorage = useCallback((): boolean => {
     try {
@@ -147,9 +279,13 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     content,
     isDirty,
     lastSaved,
+    loading,
+    saving,
     updateContent,
     updateMultiple,
     resetContent,
+    saveToFirestore,
+    loadFromFirestore,
     saveToStorage,
     loadFromStorage,
     exportData,
