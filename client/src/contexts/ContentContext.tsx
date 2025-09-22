@@ -94,10 +94,15 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     if (isAdmin && user) {
       firestoreService.subscribeToContent((firestoreContent, metadata) => {
-        if (firestoreContent && !isDirty) {
-          setContent(firestoreContent);
-          if (metadata?.lastModified) {
-            setLastSaved(new Date(metadata.lastModified));
+        if (firestoreContent) {
+          // Always update content from Firestore, but only if not currently saving
+          if (!saving) {
+            console.log('📥 Loading content from Firestore:', Object.keys(firestoreContent));
+            setContent(firestoreContent);
+            setIsDirty(false); // Reset dirty state when loading from Firestore
+            if (metadata?.lastModified) {
+              setLastSaved(new Date(metadata.lastModified));
+            }
           }
         }
       });
@@ -106,7 +111,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
         firestoreService.unsubscribeFromContent();
       };
     }
-  }, [isAdmin, user, isDirty]);
+  }, [isAdmin, user, saving]);
 
   const setValueByPath = useCallback((obj: any, path: string, value: any) => {
     const keys = path.split('.');
@@ -173,10 +178,20 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     setSaving(true);
     try {
+      console.log('💾 Saving content to Firestore:', Object.keys(content));
+      console.log('📋 Content preview:', {
+        hero: content.hero?.title,
+        about: content.about?.title,
+        totalSections: Object.keys(content).length
+      });
+      
       const success = await firestoreService.saveContent(content);
       if (success) {
         setIsDirty(false);
         setLastSaved(new Date());
+        console.log('✅ Content saved successfully to Firestore!');
+      } else {
+        console.error('❌ Failed to save content to Firestore');
       }
       return success;
     } catch (error) {
