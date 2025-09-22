@@ -1,4 +1,4 @@
-# Developer Portfolio
+# Sravanth Kumar's Portfolio
 
 ## Overview
 
@@ -11,15 +11,15 @@ Preferred communication style: Simple, everyday language.
 ## Recent Changes
 
 **September 21, 2025**: Project imported and configured for Replit environment
-- Installed all npm dependencies and resolved TypeScript/module resolution errors
-- Updated browserslist database to resolve outdated browser compatibility warnings
-- Verified Vite configuration properly allows all hosts for Replit proxy support (already correctly set)
-- Confirmed Express server configuration properly binds to 0.0.0.0:5000 for Replit environment
+- Successfully installed all npm dependencies (486 packages installed)
 - Configured "Portfolio Server" development workflow on port 5000 with webview output
+- Verified Vite configuration properly allows all hosts for Replit proxy support (allowedHosts: true)
+- Confirmed Express server configuration properly binds to 0.0.0.0:5000 for Replit environment
 - Set up autoscale deployment configuration with npm build and start scripts
 - Application running successfully with both frontend React SPA and Express backend
 - Project uses memory storage (MemStorage) so no external database required
-- All LSP diagnostics resolved, no configuration issues found
+- Portfolio website displaying correctly with Vite HMR connected
+- TypeScript configuration correct with proper path aliases and module resolution
 
 ## System Architecture
 
