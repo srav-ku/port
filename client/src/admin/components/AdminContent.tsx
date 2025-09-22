@@ -37,13 +37,13 @@ export default function AdminContent({ activeSection, showPreview }: AdminConten
       case 'social':
         return <SocialEditor />;
       default:
-        return <div className=\"p-6\">Section editor not implemented yet</div>;
+        return <div className="p-6">Section editor not implemented yet</div>;
     }
   };
 
   return (
     <div className={`flex-1 overflow-y-auto ${showPreview ? 'max-w-2xl' : ''}`}>
-      <div className=\"p-6\">
+      <div className="p-6">
         {renderEditor()}
       </div>
     </div>

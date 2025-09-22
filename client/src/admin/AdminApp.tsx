@@ -25,7 +25,7 @@ export default function AdminApp() {
   return (
     <ThemeProvider>
       <ContentProvider>
-        <div className=\"min-h-screen bg-background text-foreground\">
+        <div className="min-h-screen bg-background text-foreground">
           <AdminHeader 
             showPreview={showPreview}
             onTogglePreview={() => setShowPreview(!showPreview)}

@@ -62,89 +62,89 @@ export default function AdminHeader({ showPreview, onTogglePreview }: AdminHeade
   };
 
   return (
-    <header className=\"h-16 border-b border-border bg-background/95 backdrop-blur-md sticky top-0 z-50\">
-      <div className=\"h-full flex items-center justify-between px-6\">
-        <div className=\"flex items-center gap-4\">
-          <h1 className=\"text-xl font-semibold text-primary\">Portfolio CMS</h1>
+    <header className="h-16 border-b border-border bg-background/95 backdrop-blur-md sticky top-0 z-50">
+      <div className="h-full flex items-center justify-between px-6">
+        <div className="flex items-center gap-4">
+          <h1 className="text-xl font-semibold text-primary">Portfolio CMS</h1>
           {isDirty && (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className=\"flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400\"
+              className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400"
             >
-              <div className=\"w-2 h-2 rounded-full bg-amber-500 animate-pulse\" />
+              <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
               Unsaved changes
             </motion.div>
           )}
           {lastSaved && !isDirty && (
-            <div className=\"text-sm text-muted-foreground\">
+            <div className="text-sm text-muted-foreground">
               Last saved: {lastSaved.toLocaleTimeString()}
             </div>
           )}
         </div>
 
-        <div className=\"flex items-center gap-2\">
+        <div className="flex items-center gap-2">
           <Button
-            variant=\"ghost\"
-            size=\"sm\"
+            variant="ghost"
+            size="sm"
             onClick={handleSave}
             disabled={!isDirty}
-            className=\"gap-2\"
+            className="gap-2"
           >
-            <Save className=\"w-4 h-4\" />
+            <Save className="w-4 h-4" />
             Save
           </Button>
 
-          <div className=\"w-px h-6 bg-border\" />
+          <div className="w-px h-6 bg-border" />
 
           <Button
-            variant=\"ghost\"
-            size=\"sm\"
+            variant="ghost"
+            size="sm"
             onClick={handleExport}
-            className=\"gap-2\"
+            className="gap-2"
           >
-            <Download className=\"w-4 h-4\" />
+            <Download className="w-4 h-4" />
             Export
           </Button>
 
           <Button
-            variant=\"ghost\"
-            size=\"sm\"
+            variant="ghost"
+            size="sm"
             onClick={handleImport}
-            className=\"gap-2\"
+            className="gap-2"
           >
-            <Upload className=\"w-4 h-4\" />
+            <Upload className="w-4 h-4" />
             Import
           </Button>
 
           <Button
-            variant=\"ghost\"
-            size=\"sm\"
+            variant="ghost"
+            size="sm"
             onClick={handleReset}
-            className=\"gap-2 text-destructive hover:text-destructive\"
+            className="gap-2 text-destructive hover:text-destructive"
           >
-            <RotateCcw className=\"w-4 h-4\" />
+            <RotateCcw className="w-4 h-4" />
             Reset
           </Button>
 
-          <div className=\"w-px h-6 bg-border\" />
+          <div className="w-px h-6 bg-border" />
 
           <Button
-            variant=\"ghost\"
-            size=\"sm\"
+            variant="ghost"
+            size="sm"
             onClick={onTogglePreview}
-            className=\"gap-2\"
+            className="gap-2"
           >
-            {showPreview ? <EyeOff className=\"w-4 h-4\" /> : <Eye className=\"w-4 h-4\" />}
+            {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             {showPreview ? 'Hide' : 'Show'} Preview
           </Button>
 
           <Button
-            variant=\"ghost\"
-            size=\"sm\"
+            variant="ghost"
+            size="sm"
             onClick={toggleTheme}
           >
-            {theme === 'light' ? <Moon className=\"w-4 h-4\" /> : <Sun className=\"w-4 h-4\" />}
+            {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
           </Button>
         </div>
       </div>

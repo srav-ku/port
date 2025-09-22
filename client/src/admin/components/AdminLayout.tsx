@@ -6,7 +6,7 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
-    <div className=\"flex h-[calc(100vh-4rem)] overflow-hidden\">
+    <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
       {children}
     </div>
   );

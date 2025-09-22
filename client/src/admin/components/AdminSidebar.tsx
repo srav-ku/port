@@ -33,11 +33,11 @@ const sectionConfig = [
 
 export default function AdminSidebar({ activeSection, onSectionChange }: AdminSidebarProps) {
   return (
-    <div className=\"w-80 border-r border-border bg-background/50 backdrop-blur-sm overflow-y-auto\">
-      <div className=\"p-6\">
-        <h2 className=\"text-lg font-semibold mb-6\">Content Sections</h2>
+    <div className="w-80 border-r border-border bg-background/50 backdrop-blur-sm overflow-y-auto">
+      <div className="p-6">
+        <h2 className="text-lg font-semibold mb-6">Content Sections</h2>
         
-        <div className=\"space-y-2\">
+        <div className="space-y-2">
           {sectionConfig.map((section, index) => {
             const isActive = activeSection === section.id;
             const IconComponent = section.icon;
@@ -50,7 +50,7 @@ export default function AdminSidebar({ activeSection, onSectionChange }: AdminSi
                 transition={{ duration: 0.3, delay: index * 0.05 }}
               >
                 <Button
-                  variant={isActive ? \"default\" : \"ghost\"}
+                  variant={isActive ? "default" : "ghost"}
                   className={`w-full justify-start gap-3 h-auto p-4 ${
                     isActive 
                       ? 'bg-primary/10 text-primary border-primary/20' 
@@ -63,11 +63,11 @@ export default function AdminSidebar({ activeSection, onSectionChange }: AdminSi
                       ? 'bg-primary/20' 
                       : 'bg-muted'
                   }`}>
-                    <IconComponent className=\"w-4 h-4\" />
+                    <IconComponent className="w-4 h-4" />
                   </div>
-                  <div className=\"text-left flex-1 min-w-0\">
-                    <div className=\"font-medium truncate\">{section.label}</div>
-                    <div className=\"text-xs text-muted-foreground truncate\">
+                  <div className="text-left flex-1 min-w-0">
+                    <div className="font-medium truncate">{section.label}</div>
+                    <div className="text-xs text-muted-foreground truncate">
                       {section.description}
                     </div>
                   </div>
