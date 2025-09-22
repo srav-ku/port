@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
+import { Github, Linkedin, Twitter, Mail, ExternalLink } from 'lucide-react';
+import { useSocialLinks, usePersonalInfo } from '@/contexts/ContentContext';
 
-const socialLinks = [
-  { icon: Mail, href: 'mailto:sravanthkumarrr@gmail.com', label: 'Email' },
-  { icon: Github, href: 'https://github.com/sravanthkumar', label: 'GitHub' },
-  { icon: Linkedin, href: 'https://linkedin.com/in/sravanthkumar', label: 'LinkedIn' },
-  { icon: Twitter, href: 'https://twitter.com/sravanthkumar', label: 'Twitter' },
-];
+// Icon mapping for social links
+const iconMap: Record<string, any> = {
+  Mail, Github, Linkedin, Twitter, ExternalLink: Mail
+};
 
 export default function SocialFloatingIcons() {
+  const socialLinks = useSocialLinks();
+  const personalInfo = usePersonalInfo();
   return (
     <motion.div
       initial={{ opacity: 0, x: 30 }}
@@ -20,7 +21,7 @@ export default function SocialFloatingIcons() {
       <div className="flex flex-col items-center gap-4">
         {/* Email at top */}
         <motion.a
-          href="mailto:sravanthkumarrr@gmail.com"
+          href={`mailto:${personalInfo.email}`}
           className="text-xs text-muted-foreground hover:text-primary transition-colors whitespace-nowrap cursor-pointer mb-2"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -28,7 +29,7 @@ export default function SocialFloatingIcons() {
           whileHover={{ scale: 1.05 }}
           style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
         >
-          sravanthkumarrr@gmail.com
+          {personalInfo.email}
         </motion.a>
         
         {/* Connecting Line */}
@@ -41,24 +42,26 @@ export default function SocialFloatingIcons() {
 
         {/* Social Icons */}
         <div className="flex flex-col gap-3">
-          {socialLinks.map((social, index) => (
-            <motion.a
-              key={social.label}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative w-12 h-12 bg-background/80 backdrop-blur-sm border border-border rounded-full flex items-center justify-center hover-elevate transition-all duration-300"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
-              whileHover={{ scale: 1.1 }}
-              onClick={(e) => {
-                // Let all links work naturally, just log for debugging
-                console.log(`${social.label} clicked:`, social.href);
-              }}
-              data-testid={`social-${social.label.toLowerCase()}`}
-            >
-              <social.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+          {socialLinks.map((social, index) => {
+            const IconComponent = iconMap[social.iconName] || iconMap.Mail;
+            return (
+              <motion.a
+                key={social.label}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative w-12 h-12 bg-background/80 backdrop-blur-sm border border-border rounded-full flex items-center justify-center hover-elevate transition-all duration-300"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
+                whileHover={{ scale: 1.1 }}
+                onClick={(e) => {
+                  // Let all links work naturally, just log for debugging
+                  console.log(`${social.label} clicked:`, social.url);
+                }}
+                data-testid={`social-${social.label.toLowerCase()}`}
+              >
+                <IconComponent className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
               
               {/* Glow effect */}
               <div className="absolute inset-0 rounded-full bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -67,8 +70,9 @@ export default function SocialFloatingIcons() {
               <div className="absolute right-full mr-3 px-2 py-1 bg-background border border-border rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                 {social.label}
               </div>
-            </motion.a>
-          ))}
+              </motion.a>
+            );
+          })}
         </div>
       </div>
     </motion.div>

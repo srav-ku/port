@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { heroContent } from '@/content/siteData';
+import { useHeroContent } from '@/contexts/ContentContext';
 
 interface HeroSectionProps {
   onScrollToNext: () => void;
 }
 
 export default function HeroSection({ onScrollToNext }: HeroSectionProps) {
+  const heroContent = useHeroContent();
   return (
     <section className="min-h-screen-safe flex items-center justify-center relative overflow-hidden section-padding safe-top">
       {/* Background image with overlay - optimized loading */}
@@ -19,10 +20,14 @@ export default function HeroSection({ onScrollToNext }: HeroSectionProps) {
           />
           <img 
             src="/attached_assets/clean-workspace-bg.png"
-            alt="Professional developer workspace"
+            alt=""
             className="w-full h-full object-cover object-center opacity-30"
             loading="eager"
             decoding="async"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+            }}
           />
         </picture>
         {/* Light overlay for subtle background */}

@@ -1,16 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Moon, Sun, Menu, X, Github, Linkedin, Twitter, Mail } from 'lucide-react';
+import { Moon, Sun, Menu, X, Github, Linkedin, Twitter, Mail, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
-import { navigationSections } from '@/content/siteData';
+import { useNavigation, useSocialLinks } from '@/contexts/ContentContext';
 import { motion } from 'framer-motion';
 
-const socialLinks = [
-  { icon: Mail, href: 'mailto:sravanthkumarrr@gmail.com', label: 'Email' },
-  { icon: Github, href: 'https://github.com/sravanthkumar', label: 'GitHub' },
-  { icon: Linkedin, href: 'https://linkedin.com/in/sravanthkumar', label: 'LinkedIn' },
-  { icon: Twitter, href: 'https://twitter.com/sravanthkumar', label: 'Twitter' },
-];
+// Icon mapping for social links
+const iconMap: Record<string, any> = {
+  Mail, Github, Linkedin, Twitter, ExternalLink: Mail
+};
 
 interface NavigationProps {
   activeSection: string;
@@ -19,6 +17,8 @@ interface NavigationProps {
 
 export default function Navigation({ activeSection, onSectionChange }: NavigationProps) {
   const { theme, toggleTheme } = useTheme();
+  const navigationSections = useNavigation();
+  const socialLinksData = useSocialLinks();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -105,17 +105,20 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
       >
         <div className="flex items-center justify-end section-padding py-3">
           <div className="flex items-center gap-2">
-            {socialLinks.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target={social.label !== 'Email' ? '_blank' : undefined}
-                rel={social.label !== 'Email' ? 'noopener noreferrer' : undefined}
-                className="w-9 h-9 bg-background/60 backdrop-blur-sm border border-border rounded-full flex items-center justify-center hover:border-primary/40 hover:bg-primary/10 transition-all duration-300"
-              >
-                <social.icon className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
-              </a>
-            ))}
+            {socialLinksData.map((social) => {
+              const IconComponent = iconMap[social.iconName] || iconMap.Mail;
+              return (
+                <a
+                  key={social.label}
+                  href={social.url}
+                  target={social.platform !== 'Email' ? '_blank' : undefined}
+                  rel={social.platform !== 'Email' ? 'noopener noreferrer' : undefined}
+                  className="w-9 h-9 bg-background/60 backdrop-blur-sm border border-border rounded-full flex items-center justify-center hover:border-primary/40 hover:bg-primary/10 transition-all duration-300"
+                >
+                  <IconComponent className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
+                </a>
+              );
+            })}
             
             <div className="w-px h-6 bg-border mx-1" />
             

@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
-import { aboutContent } from '@/content/siteData';
+import { useAboutContent } from '@/contexts/ContentContext';
 
 export default function AboutSection() {
+  const aboutContent = useAboutContent();
   return (
     <section className="min-h-screen-safe section-padding section-spacing pt-20 lg:pt-24">
       <div className="max-w-6xl mx-auto">
@@ -33,20 +34,16 @@ export default function AboutSection() {
               </p>
               
               <p className="text-fluid-base lg:text-fluid-lg text-muted-foreground leading-relaxed">
-                I specialize in modern web technologies, with expertise in React, TypeScript, 
-                Node.js, and cloud platforms. I believe in writing clean, maintainable code 
-                and creating user experiences that are both beautiful and intuitive.
+                {aboutContent.secondParagraph}
               </p>
 
               <div className="grid grid-cols-2 gap-4 sm:gap-6 pt-6">
-                <Card className="p-4 sm:p-6 text-center hover-elevate">
-                  <div className="text-2xl sm:text-3xl font-bold text-primary mb-2">50+</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Projects Completed</div>
-                </Card>
-                <Card className="p-4 sm:p-6 text-center hover-elevate">
-                  <div className="text-2xl sm:text-3xl font-bold text-primary mb-2">5+</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Years Experience</div>
-                </Card>
+                {aboutContent.kpiCards.map((kpi, index) => (
+                  <Card key={index} className="p-4 sm:p-6 text-center hover-elevate">
+                    <div className="text-2xl sm:text-3xl font-bold text-primary mb-2">{kpi.value}</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground">{kpi.label}</div>
+                  </Card>
+                ))}
               </div>
             </motion.div>
 
@@ -62,22 +59,12 @@ export default function AboutSection() {
                 <div className="space-y-4">
                   <h3 className="text-lg sm:text-xl font-semibold mb-4">Key Technologies</h3>
                   <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-primary" />
-                      <span className="text-sm sm:text-base">React & TypeScript</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-primary" />
-                      <span className="text-sm sm:text-base">Node.js & Express</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-primary" />
-                      <span className="text-sm sm:text-base">PostgreSQL & MongoDB</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-primary" />
-                      <span className="text-sm sm:text-base">AWS & Cloud Platforms</span>
-                    </div>
+                    {aboutContent.keyTechnologies.map((tech, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <div className="w-2 h-2 rounded-full bg-primary" />
+                        <span className="text-sm sm:text-base">{tech.name}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </Card>

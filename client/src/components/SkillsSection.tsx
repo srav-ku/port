@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
-import { skillsContent } from '@/content/siteData';
+import { useSkillsContent } from '@/contexts/ContentContext';
 import { Code, Server, Cloud, Palette } from 'lucide-react';
 
 // Icon mapping for categories
@@ -26,6 +26,7 @@ const categoryIconColors: Record<string, string> = {
 };
 
 export default function SkillsSection() {
+  const skillsContent = useSkillsContent();
   return (
     <section className="min-h-screen-safe section-padding section-spacing pt-20 lg:pt-24">
       <div className="max-w-6xl mx-auto">

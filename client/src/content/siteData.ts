@@ -7,6 +7,13 @@ export const personalInfo = {
   tagline: "Crafting digital experiences with modern technology and creative vision. Passionate about building solutions that make a difference.",
 };
 
+export const socialLinks = [
+  { platform: 'Email', url: 'mailto:sravanthkumarrr@gmail.com', label: 'Email', iconName: 'Mail' },
+  { platform: 'GitHub', url: 'https://github.com/sravanthkumar', label: 'GitHub', iconName: 'Github' },
+  { platform: 'LinkedIn', url: 'https://linkedin.com/in/sravanthkumar', label: 'LinkedIn', iconName: 'Linkedin' },
+  { platform: 'Twitter', url: 'https://twitter.com/sravanthkumar', label: 'Twitter', iconName: 'Twitter' },
+];
+
 export const heroContent = {
   title: {
     first: "Sravanth", // Will use theme color
@@ -34,6 +41,17 @@ export const navigationSections = [
 export const aboutContent = {
   title: "About Me",
   description: "I'm a passionate developer with experience in building modern web applications and solving complex problems through innovative solutions.",
+  secondParagraph: "I specialize in modern web technologies, with expertise in React, TypeScript, Node.js, and cloud platforms. I believe in writing clean, maintainable code and creating user experiences that are both beautiful and intuitive.",
+  kpiCards: [
+    { value: "50+", label: "Projects Completed" },
+    { value: "5+", label: "Years Experience" }
+  ],
+  keyTechnologies: [
+    { name: "React & TypeScript" },
+    { name: "Node.js & Express" },
+    { name: "PostgreSQL & MongoDB" },
+    { name: "AWS & Cloud Platforms" }
+  ],
   education: [
     {
       id: "1",
@@ -211,12 +229,45 @@ export const certificationsContent = {
 };
 
 export const contactContent = {
-  title: "Get in Touch",
-  description: "Let's work together to bring your ideas to life. I'm always open to discussing new opportunities and interesting projects.",
-  email: personalInfo.email,
-  social: {
-    github: "https://github.com/sravanthkumar",
-    linkedin: "https://linkedin.com/in/sravanthkumar", 
-    twitter: "https://twitter.com/sravanthkumar",
+  title: "Let's Connect",
+  subtitle: "Let's build something meaningful together.",
+  description: "I'm always excited to work on new projects and collaborate with creative teams. Whether you have a clear vision or just an idea, I'd love to help bring it to life.",
+  bulletPoints: [
+    { text: "Full-stack development expertise" },
+    { text: "Modern technology stack" },
+    { text: "Agile development process" },
+    { text: "Focus on user experience" }
+  ],
+  form: {
+    title: "Or contact through this form",
+    fields: {
+      firstName: {
+        label: "First Name",
+        placeholder: "John"
+      },
+      lastName: {
+        label: "Last Name",
+        placeholder: "Doe"
+      },
+      email: {
+        label: "Email",
+        placeholder: "john@example.com"
+      },
+      subject: {
+        label: "Subject",
+        placeholder: "Project inquiry"
+      },
+      message: {
+        label: "Message",
+        placeholder: "Tell me about your project..."
+      }
+    },
+    submitButton: {
+      text: "Send Message"
+    }
   },
+  email: personalInfo.email,
+  emailCard: {
+    title: "Ready to Start a Project?"
+  }
 };

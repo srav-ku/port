@@ -10,9 +10,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { projectsContent } from "@/content/siteData";
+import { useProjectsContent } from "@/contexts/ContentContext";
 
 export default function ProjectsSection() {
+  const projectsContent = useProjectsContent();
   const [selectedFilter, setSelectedFilter] = useState("All Projects");
   const [selectedProject, setSelectedProject] = useState<
     (typeof projectsContent.projects)[0] | null

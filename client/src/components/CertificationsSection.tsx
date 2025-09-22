@@ -3,9 +3,10 @@ import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Award, ExternalLink, Calendar } from 'lucide-react';
-import { certificationsContent } from '@/content/siteData';
+import { useCertificationsContent } from '@/contexts/ContentContext';
 
 export default function CertificationsSection() {
+  const certificationsContent = useCertificationsContent();
   const [flippedCard, setFlippedCard] = useState<string | null>(null);
 
   const handleCardClick = (certId: string) => {

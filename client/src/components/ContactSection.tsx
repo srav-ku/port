@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Mail, Send, ArrowRight } from 'lucide-react';
-import { personalInfo } from '@/content/siteData';
+import { useContactContent, usePersonalInfo } from '@/contexts/ContentContext';
 
 export default function ContactSection() {
+  const contactContent = useContactContent();
+  const personalInfo = usePersonalInfo();
   return (
     <section className="min-h-screen-safe section-padding section-spacing pt-20 lg:pt-24">
       <div className="max-w-4xl mx-auto">
@@ -17,10 +19,10 @@ export default function ContactSection() {
           viewport={{ once: true }}
           className="mb-8 sm:mb-12 lg:mb-16"
         >
-          <h2 className="text-fluid-4xl lg:text-fluid-5xl font-light mb-4 sm:mb-6">Let's Connect</h2>
+          <h2 className="text-fluid-4xl lg:text-fluid-5xl font-light mb-4 sm:mb-6">{contactContent.title}</h2>
           <div className="w-16 sm:w-20 h-1 bg-primary rounded-full" />
           <p className="text-fluid-lg lg:text-fluid-xl text-muted-foreground mt-4 sm:mt-6 max-w-2xl">
-            Let's build something meaningful together.
+            {contactContent.subtitle}
           </p>
         </motion.div>
 
@@ -32,29 +34,18 @@ export default function ContactSection() {
             viewport={{ once: true }}
           >
             <Card className="p-8 h-full bg-gradient-to-br from-primary/5 to-transparent border-primary/20">
-              <h3 className="text-2xl font-semibold mb-6">Ready to Start a Project?</h3>
+              <h3 className="text-2xl font-semibold mb-6">{contactContent.emailCard.title}</h3>
               <p className="text-muted-foreground mb-6 leading-relaxed">
-                I'm always excited to work on new projects and collaborate with creative teams. 
-                Whether you have a clear vision or just an idea, I'd love to help bring it to life.
+                {contactContent.description}
               </p>
               
               <div className="space-y-4 mb-8">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <span className="text-sm">Full-stack development expertise</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <span className="text-sm">Modern technology stack</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <span className="text-sm">Agile development process</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <span className="text-sm">Focus on user experience</span>
-                </div>
+                {contactContent.bulletPoints.map((point, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-primary" />
+                    <span className="text-sm">{point.text}</span>
+                  </div>
+                ))}
               </div>
 
               {/* Email Me Card */}
@@ -83,27 +74,27 @@ export default function ContactSection() {
             viewport={{ once: true }}
           >
             <Card className="p-8 h-full">
-              <h3 className="text-xl font-semibold mb-6">Or contact through this form</h3>
+              <h3 className="text-xl font-semibold mb-6">{contactContent.form.title}</h3>
               
               <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); console.log('Form submitted'); }}>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="firstName" className="block text-sm font-medium mb-2">
-                      First Name
+                      {contactContent.form.fields.firstName.label}
                     </label>
                     <Input 
                       id="firstName" 
-                      placeholder="John"
+                      placeholder={contactContent.form.fields.firstName.placeholder}
                       data-testid="input-first-name"
                     />
                   </div>
                   <div>
                     <label htmlFor="lastName" className="block text-sm font-medium mb-2">
-                      Last Name
+                      {contactContent.form.fields.lastName.label}
                     </label>
                     <Input 
                       id="lastName" 
-                      placeholder="Doe"
+                      placeholder={contactContent.form.fields.lastName.placeholder}
                       data-testid="input-last-name"
                     />
                   </div>
@@ -150,7 +141,7 @@ export default function ContactSection() {
                   data-testid="button-send-message"
                 >
                   <Send className="w-4 h-4 mr-2" />
-                  Send Message
+                  {contactContent.form.submitButton.text}
                 </Button>
               </form>
             </Card>

@@ -2,9 +2,10 @@ import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Building, Calendar } from 'lucide-react';
-import { experienceContent } from '@/content/siteData';
+import { useExperienceContent } from '@/contexts/ContentContext';
 
 export default function ExperienceSection() {
+  const experienceContent = useExperienceContent();
   return (
     <section className="min-h-screen-safe section-padding section-spacing pt-20 lg:pt-24">
       <div className="max-w-4xl mx-auto">
