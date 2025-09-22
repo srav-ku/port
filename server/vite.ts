@@ -48,6 +48,29 @@ export async function setupVite(app: Express, server: Server) {
   // Serve static assets from attached_assets directory
   app.use("/attached_assets", express.static(path.resolve(__dirname, "..", "attached_assets")));
   
+  // Handle admin page specifically
+  app.get("/admin.html", async (req, res, next) => {
+    try {
+      const adminTemplate = path.resolve(
+        __dirname,
+        "..",
+        "client",
+        "admin.html",
+      );
+
+      let template = await fs.promises.readFile(adminTemplate, "utf-8");
+      template = template.replace(
+        `src="/src/adminMain.tsx"`,
+        `src="/src/adminMain.tsx?v=${nanoid()}"`,
+      );
+      const page = await vite.transformIndexHtml(req.originalUrl, template);
+      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+    } catch (e) {
+      vite.ssrFixStacktrace(e as Error);
+      next(e);
+    }
+  });
+
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
 
