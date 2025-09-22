@@ -1,38 +1,44 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
+// Note: This file is kept for compatibility but the portfolio
+// will use Firebase for all data storage and authentication.
+// This storage is only used if needed for development purposes.
 
-// modify the interface with any CRUD methods
-// you might need
-
-export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+export interface PortfolioData {
+  name: string;
+  title: string;
+  bio: string;
+  skills: string[];
+  projects: Array<{
+    id: string;
+    title: string;
+    description: string;
+    technologies: string[];
+    url?: string;
+  }>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
+// Simple in-memory storage for development (Firebase will handle production data)
+export class DevStorage {
+  private data: PortfolioData;
 
   constructor() {
-    this.users = new Map();
+    this.data = {
+      name: "Developer",
+      title: "Software Engineer",
+      bio: "Passionate about creating amazing web experiences",
+      skills: ["React", "TypeScript", "Firebase"],
+      projects: []
+    };
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+  async getPortfolioData(): Promise<PortfolioData> {
+    return this.data;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+  async updatePortfolioData(data: Partial<PortfolioData>): Promise<PortfolioData> {
+    this.data = { ...this.data, ...data };
+    return this.data;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DevStorage();
+
