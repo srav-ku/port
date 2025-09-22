@@ -19,6 +19,9 @@ export default defineConfig({
         ]
       : []),
   ],
+  define: {
+    'import.meta.env.VITE_FIREBASE_API_KEY': JSON.stringify(process.env.FIREBASE_API_KEY),
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
