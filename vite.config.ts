@@ -20,7 +20,9 @@ export default defineConfig({
       : []),
   ],
   define: {
-    'import.meta.env.VITE_FIREBASE_API_KEY': JSON.stringify(process.env.FIREBASE_API_KEY),
+    "import.meta.env.VITE_FIREBASE_API_KEY": JSON.stringify(
+      process.env.VITE_FIREBASE_API_KEY,
+    ),
   },
   resolve: {
     alias: {
